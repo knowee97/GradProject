@@ -22,3 +22,9 @@ MPS_2_MPH_FACTOR = 2.23694             # Conversion 3600s in 1 hour, 1609m in 1m
 # Initialize Webcam
 WIDTH = 640
 HEIGHT = 480
+
+def calculateFPS(prev_frame_time):
+    new_frame_time = time.time()
+    time_elapsed = new_frame_time - prev_frame_time
+    fps = 1 / time_elapsed if time_elapsed > 0 else 1
+    return fps, new_frame_time
