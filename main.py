@@ -1,93 +1,20 @@
 import time
-from ultralytics import YOLO
-import cv2
-import numpy as np
 from collections import defaultdict
 
 from parameters_config import *
-
-def runWebCam(prev_positions, prev_frame_time):
-    cap = cv2.VideoCapture(0)
-
-    if not cap.isOpened():
-        raise("Error: Could not open webcam.")
-    
-    try:
-        while True:
-            ret, frame = cap.read()
-
-            if not ret:
-                raise("Error: Couldn't read frame from Webcam.")
-
-            # Resize frame
-            frame_resized = cv2.resize(frame, (WIDTH, HEIGHT))
-            
-            # Convert the frame to RGB (YOLO in RGB format)
-            frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
-
-            # Run inference
-            results = model(frame_rgb)
-
-            # Process each detection: box coordinates, class ID, and confidence score
-            for result in results:
-                boxes = result.boxes
-
-                for i in range(len(boxes)):
-                    box = boxes.xyxy[i].numpy().astype(int)        # Coordinates: results.boxes.xyxy
-                    confidence = float(boxes.conf[i].numpy())      # Score: confidence of detection
-                    class_id = int(boxes.cls[i].numpy())           # Class ID: results.boxes.cls
-                    label = model.names[class_id]
-
-                    if label in TARGETS:
-                        x1, y1, x2, y2 = box                       # Box Coordinates
-                        center = ((x1 + x2) // 2, (y1 + y2) // 2)
-                        track_id = (label, i)                      # ID from label and index
-                        
-                        if prev_positions[track_id] is not None:
-                            prev_center = prev_positions[track_id]
-                            distance_pixels = euclidean_distance(center, prev_center)
-                            distance_meters = distance_pixels * pixels_to_meters
-                            new_frame_time = time.time()
-                            time_elapsed = new_frame_time - prev_frame_time
-                            fps = 1 / time_elapsed if time_elapsed > 0 else 1
-                            
-                            speed_mps = distance_meters * fps           # (units/s)
-                            speed_mph = speed_mps * MPS_2_MPH_FACTOR    # Conversion 3600s in 1 hour, 1609m in 1mi (3600/1609)
-                            
-                            cv2.putText(frame_resized, f"Speed: {speed_mph:.2f} mph", (x1, y1 - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-                        
-                        # Update previous positions
-                        prev_positions[track_id] = center
-                        prev_frame_time = new_frame_time
-
-                        # Draw bounding box and label on frame
-                        color = (0, 0, 255)
-                        cv2.rectangle(frame_resized, (x1, y1), (x2, y2), color, 2)
-                        cv2.putText(frame_resized, f"{label} {confidence:.2f}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+from vehicle_calculations import *
+from camera_config import *
 
 
-            
-            
-            fps, prev_frame_time = calculateFPS(prev_frame_time)
-            # Display FPS on frame
-            cv2.putText(frame_resized, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            # Display the frame with bounding boxes
-            cv2.imshow("Webcam YOLO Detection", frame_resized)
+def main():
 
-            # Break the loop if the user presses 'q'
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-    
-    finally:
-        cap.release()
-        cv2.destroyAllWindows()
-        
-LIVE_VIDEO = True
+    LIVE_VIDEO = True
 
-if LIVE_VIDEO is True:
-    prev_frame_time = time.time()
-    prev_positions = defaultdict(lambda: None)
-    runWebCam(prev_positions, prev_frame_time)
+    if LIVE_VIDEO is True:
+        prev_frame_time = time.time()
+        prev_positions = defaultdict(lambda: None)
+        runWebCam(prev_positions, prev_frame_time)
 
-
+if __name__ == "__main__":
+        main()
