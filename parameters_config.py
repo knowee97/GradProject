@@ -1,5 +1,5 @@
 from ultralytics import YOLO
-from vehicle_calculations import *
+
 
 # Load YOLO model
 model_path = r"/models/yolov8n.pt"
