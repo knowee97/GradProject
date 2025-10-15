@@ -49,19 +49,17 @@ def draw_boxes(results, frame_resized, prev_positions, time_elapsed):
 
 def runWebCam(prev_positions, prev_frame_time, VIDEO_PATH, video, show_window):
 
-
     if video:
-        cap = cv2.VideoCapture(VIDEO_PATH)
-        if not cap.isOpened():
-            raise Exception("Error: Could not open video stream or file.")
-        window_title = "Fake Webcam"
-        
+      video = model(VIDEO_PATH)
+      window_title = "Fake Webcam"
     else:
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
-            raise Exception("Error: Could not open webcam.")
-        window_title = "YOLO Webcam"
-        show_window = True
+      video = 0 #For webcam
+      window_title = "YOLO Webcam"
+
+      cap = cv2.VideoCapture(video)
+      if not cap.isOpened():
+        raise Exception("Error: Could not open video stream or file.")
+    show_window = True
 
     video_fps = cap.get(cv2.CAP_PROP_FPS)
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")

@@ -8,13 +8,14 @@ from camera_config import *
 
 
 def main():
-    LIVE_VIDEO = False
-    LOCAL_VIDEO = True
+    LIVE_VIDEO = True
+    LOCAL_VIDEO = False
     
     if LIVE_VIDEO is True:
         prev_frame_time = time.time()
         prev_positions = defaultdict(lambda: None)
-        runWebCam(prev_positions, prev_frame_time)
+        VIDEO_PATH = r'Videos\BenchmarkVideo_Cut.mp4'
+        runWebCam(prev_positions, prev_frame_time, VIDEO_PATH ,video = False, show_window=True)
 
     elif LOCAL_VIDEO is True:
         VIDEO_PATH = r'Videos\BenchmarkVideo_Cut.mp4'
