@@ -8,22 +8,27 @@ from camera_config import *
 
 
 def main():
-    prev_frame_time = time.time()
-    prev_positions = defaultdict(lambda: None)
-    #VIDEO_PATH = r'Videos\BenchmarkVideo_Cut.mp4'
-    ##VIDEO_PATH = r'/home/noe_ee/GradProject/Videos/BenchmarkVideo_Cut.mp4'
-    VIDEO_PATH = ""
-    cap = cv2.VideoCapture(0)
-
-    if cap.isOpened():
-        cap.release()
+    LIVE_VIDEO = True
+    LOCAL_VIDEO = False
+    
+    if LIVE_VIDEO is True:
+        prev_frame_time = time.time()
+        prev_positions = defaultdict(lambda: None)
+        VIDEO_PATH = r'Videos\BenchmarkVideo_Cut.mp4'
         runWebCam(prev_positions, prev_frame_time, VIDEO_PATH ,video = False, show_window=True)
 
-    else:
-        cap.release()
-        #VIDEO_PATH = r'/home/noe_ee/GradProject/Videos/BenchmarkVideo_Cut.mp4'
-        #runWebCam(prev_positions, prev_frame_time, VIDEO_PATH ,video = True, show_window=True)
-        
+    elif LOCAL_VIDEO is True:
+        VIDEO_PATH = r'Videos\BenchmarkVideo_Cut.mp4'
+        prev_frame_time = time.time()
+        prev_positions = defaultdict(lambda: None)
+        emulate_webcam = True
 
+        if emulate_webcam:
+            runWebCam(prev_positions, prev_frame_time, VIDEO_PATH ,video = True, show_window=True)
+        
+        else:
+            runWebCam(prev_positions, prev_frame_time, VIDEO_PATH ,video = True, show_window=False)
+
+         
 if __name__ == "__main__":
         main()

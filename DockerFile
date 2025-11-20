@@ -1,0 +1,23 @@
+# Base image (Linux Python)
+FROM python:3.11-slim-bookworm
+
+# Working directory inside the container
+WORKDIR /app
+
+# Install system-level dependencies (for numpy, opencv, torch, etc.)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake git \
+    libatlas-base-dev libopenblas-dev \
+    libjpeg-dev zlib1g-dev libtiff5-dev libpng-dev \
+    libglib2.0-0 libsm6 libxext6 libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency list and install Python libs
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all project files and folders
+COPY . .
+
+# Default command – change this to whatever you normally run
+CMD ["python", "test.py"]
