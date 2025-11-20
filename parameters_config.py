@@ -2,7 +2,8 @@ from ultralytics import YOLO
 
 
 # Load YOLO model
-model_path = r"/models/yolov8n.pt"
+#model_path = r"/models/yolov8n.pt"
+model_path = r"/home/noe_ee/GradProject/runs/train_yolov8n.pt/weights/best.pt"
 model = YOLO(model_path)
 
 

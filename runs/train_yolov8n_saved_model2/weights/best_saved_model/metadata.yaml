@@ -1,0 +1,28 @@
+description: Ultralytics best model trained on /home/noe_ee/GradProject/data_folder/detect/detect.yaml
+author: Ultralytics
+date: '2025-10-16T16:13:56.142375'
+version: 8.3.214
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: person
+  1: bicycle
+  2: car
+  3: motorcycle
+  4: airplane
+  5: bus
+  6: train
+  7: truck
+args:
+  batch: 1
+  fraction: 1.0
+  half: false
+  int8: true
+  nms: false
+channels: 3

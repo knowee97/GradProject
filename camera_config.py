@@ -56,24 +56,20 @@ def runWebCam(prev_positions, prev_frame_time, VIDEO_PATH, video, show_window):
       video = 0 #For webcam
       window_title = "YOLO Webcam"
 
-      cap = cv2.VideoCapture(video)
-      if not cap.isOpened():
+    cap = cv2.VideoCapture(video)
+
+    if not cap.isOpened():
         raise Exception("Error: Could not open video stream or file.")
-    show_window = True
 
     video_fps = cap.get(cv2.CAP_PROP_FPS)
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    
-    
+
     output_path = create_unique_filename(folder_path="output_video", model_tag = os.path.splitext(os.path.basename(model_path))[0])
     print("Video will be saved to:", output_path)
 
     out = cv2.VideoWriter(output_path, fourcc, video_fps, (WIDTH, HEIGHT))
-    
     if not out.isOpened():
         raise Exception(f"Failed to open video writer with path: {output_path}")
-
-
 
     try:
         while True:
