@@ -1,23 +1,21 @@
-# Base image (Linux Python)
-FROM python:3.11-slim-bookworm
+FROM python:3.11-slim-bullseye
 
-# Working directory inside the container
-WORKDIR /app
+WORKDIR /GradProject
 
-# Install system-level dependencies (for numpy, opencv, torch, etc.)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential cmake git \
-    libatlas-base-dev libopenblas-dev \
-    libjpeg-dev zlib1g-dev libtiff5-dev libpng-dev \
-    libglib2.0-0 libsm6 libxext6 libxrender-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential cmake libatlas-base-dev libopenblas-dev \
+    liblapack-dev libjpeg-dev libpng-dev libfreetype6-dev pkg-config \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency list and install Python libs
+# Copy requirements
 COPY requirements.txt .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files and folders
+# Copy project files
 COPY . .
 
-# Default command – change this to whatever you normally run
-CMD ["python", "test.py"]
+# Default command
+CMD ["python", "main.py"]
